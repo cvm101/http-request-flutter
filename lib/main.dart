@@ -30,7 +30,8 @@ class ApiScreenState extends State<AppScreen> {
   }
 
   Future<void> fetchData() async {
-    final response = await http.get(Uri.parse('https://jsonplaceholder.typicode.com/posts'));
+    final response = await http.get(
+        Uri.parse('https://jsonplaceholder.typicode.com/posts'));
 
     if (response.statusCode == 200) {
       setState(() {
@@ -53,9 +54,40 @@ class ApiScreenState extends State<AppScreen> {
           return ListTile(
             title: Text(posts[index]['title']),
             subtitle: Text(posts[index]['body']),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(
+                  builder: (context) => DetailedScreen(post: posts[index])));
+            },
           );
         },
       ),
     );
   }
+}
+
+class DetailedScreen extends StatelessWidget {
+  final dynamic post;
+
+  DetailedScreen({required this.post});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("Post detail"),
+        ),
+        body: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(post['title'], style: TextStyle(fontSize: 24)),
+                SizedBox(height: 16),
+                Text(post['body'], style: TextStyle(fontSize: 16)),
+              ],
+            )
+        )
+    );
+  }
+
 }
